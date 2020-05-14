@@ -1,9 +1,9 @@
 import React from 'react';
 import Card from './Card';
 
-const CardList = () => {
+const CardList = (props) => {
 
-    const robotsJSX = this.props.robots.map(rob => {
+    const robotsJSX = props.robots.map(rob => {
         return (
             <Card key={rob.id} rob={rob} />
         );
