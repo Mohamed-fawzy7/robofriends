@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import CardList from './CardList';
+import Header from './Header';
+import Scroll from './Scroll';
+import ErrorBoundry from './ErrorBoundry';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    constructor() {
+        super();
+        this.state = {
+            robots: [],
+            searchFieldValue: ''
+        }
+    }
+    inputHandler = (event) => {
+        this.setState({ searchFieldValue: event.target.value.toLowerCase() });
+    }
+    componentDidMount() {
+        fetch('https://jsonplaceholder.typicode.com/users').then(res => res.json()).then((robots) => {
+            this.setState({ robots });
+        });
+    }
+    render() {
+        const filteredRobots = this.state.robots.filter((robo) => {
+            return robo.name.toLowerCase().includes(this.state.searchFieldValue)
+        })
+        return (
+            <div className="tc">
+                <Header inputHandler={this.inputHandler} />
+                <Scroll>
+                    <ErrorBoundry>
+                        <CardList robots={filteredRobots} />
+                    </ErrorBoundry>
+                </Scroll>
+            </div>
+        )
+    }
 }
 
 export default App;
